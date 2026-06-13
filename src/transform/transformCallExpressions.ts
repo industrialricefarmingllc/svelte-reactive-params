@@ -2,7 +2,7 @@ import MagicString from 'magic-string'
 import * as ts from 'typescript'
 
 import { isExternalCall } from './isExternalCall'
-import { renderReactiveObjectLiteral } from './renderReactiveObjectLiteral'
+import { renderReactiveArgument } from './renderReactiveArgument'
 
 export function transformCallExpressions(code: string, externalNames: Set<string>, localNames: Set<string>, filePath: string): string {
   const sourceFile = ts.createSourceFile(filePath, code, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS)
@@ -15,9 +15,11 @@ export function transformCallExpressions(code: string, externalNames: Set<string
   function visit(node: ts.Node): void {
     if (ts.isCallExpression(node) && isExternalCall(node.expression, externalNames, localNames)) {
       for (const arg of node.arguments) {
-        if (ts.isObjectLiteralExpression(arg)) {
-          string.overwrite(arg.getStart(sourceFile), arg.getEnd(), renderReactiveObjectLiteral(arg, sourceFile))
+        if (ts.isSpreadElement(arg)) {
+          continue
         }
+
+        string.overwrite(arg.getStart(sourceFile), arg.getEnd(), renderReactiveArgument(arg, sourceFile))
       }
     }
 

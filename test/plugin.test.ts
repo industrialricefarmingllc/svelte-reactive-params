@@ -2,23 +2,20 @@ import { expect, test } from 'bun:test'
 
 import { transformSvelteReactiveParams } from '../src/transform/transformSvelteReactiveParams'
 
-test('rewrites imported function args into accessor backed object values', () => {
+test('rewrites imported function args into accessor backed values', () => {
   const input = `
 <script lang="ts">
-  import { renderWidget } from './lib/renderWidget.svelte.ts'
+  import { countUp } from './lib/countUp.svelte.ts'
 
-  let { title = 'hello', count = 0 } = $props()
+  let { count = 0, items = [1, 2, 3] } = $props()
 
-  const result = renderWidget({ title, count, label: 1 + count })
+  const result = countUp(count, items, 1 + count)
 </script>
 `
 
   const output = transformSvelteReactiveParams(input)
 
-  expect(output).toContain("get title() { return title }, set title(value) { title = value }")
-  expect(output).toContain('get count() { return count }, set count(value) { count = value }')
-  expect(output).toContain('get label() { return 1 + count }')
-  expect(output).not.toContain('title, count')
+  expect(output).toContain('countUp({ get value() { return count }, set value(value) { count = value } }, { get value() { return items }, set value(value) { items = value } }, { get value() { return 1 + count } })')
 })
 
 test('leaves local functions alone', () => {
@@ -58,4 +55,20 @@ test('keeps arrays, functions, and class instances inside external call args', (
   expect(output).toContain('get items() { return items }, set items(value) { items = value }')
   expect(output).toContain('get factory() { return factory }, set factory(value) { factory = value }')
   expect(output).toContain('get sample() { return sample }, set sample(value) { sample = value }')
+})
+
+test('wraps top level array and primitive arguments', () => {
+  const input = `
+<script lang="ts">
+  import { countUp } from './lib/countUp.svelte.ts'
+
+  let { count = 0 } = $props()
+
+  countUp(count, [1, 2, 3], 1)
+</script>
+`
+
+  const output = transformSvelteReactiveParams(input)
+
+  expect(output).toContain('countUp({ get value() { return count }, set value(value) { count = value } }, { get value() { return [1, 2, 3] } }, { get value() { return 1 } })')
 })

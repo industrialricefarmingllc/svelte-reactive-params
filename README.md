@@ -7,30 +7,31 @@ I like to use script tags for declarations exclusively, hiding logic until I nee
 
 ## Transforms
 
-Rewrites object literal arguments passed to imported external calls into accessor-backed props, so reactive values stay live when they cross module boundaries.
+Rewrites arguments passed to imported external calls into accessor-backed values, so reactive values stay live when they cross module boundaries.
 
 Input:
 
 ```svelte
 <script lang="ts">
-  import { renderWidget } from './lib/renderWidget.svelte.ts'
+  import { countUp } from './lib/countUp.svelte.ts'
 
-  let { title = 'hello' } = $props()
+  let { counter = 0 } = $props()
 
-  renderWidget({ title })
+  countUp(counter)
 </script>
 ```
 
 Output:
 
-```svelte
-<script lang="ts">
-  import { renderWidget } from './lib/renderWidget.svelte.ts'
+The plugin rewrites that call so `countUp` receives a live wrapper around `counter`.
 
-  let { title = 'hello' } = $props()
+Usage:
 
-  renderWidget({ get title() { return title }, set title(value) { title = value } })
-</script>
+```ts
+export function countUp(args) {
+  const { value } = args
+  value++ // updates in template
+}
 ```
 
 ## Install
@@ -42,6 +43,7 @@ bun add svelte-reactive-params
 ## Use
 
 ```ts
+// vite.config.ts
 import { svelteReactiveParams } from 'svelte-reactive-params'
 
 export default {
