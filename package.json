@@ -1,0 +1,43 @@
+{
+  "name": "svelte-reactive-params",
+  "version": "0.1.0",
+  "description": "Makes any params passed to external functions reactive when changed and accessed there.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "bun test",
+    "build:types": "bun x tsc -p tsconfig.build.json",
+    "build:js": "bun build src/index.ts --outdir dist --format esm --external typescript --external magic-string",
+    "build": "bun run build:types && bun run build:js",
+    "prepack": "bun run build"
+  },
+  "keywords": [
+    "svelte",
+    "vite",
+    "plugin",
+    "reactivity"
+  ],
+  "author": "nicerice",
+  "license": "MIT",
+  "dependencies": {
+    "magic-string": "^0.30.21",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "vite": "^8.0.14"
+  }
+}
