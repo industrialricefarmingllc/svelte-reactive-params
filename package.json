@@ -1,5 +1,5 @@
 {
-  "name": "svelte-reactive-params",
+  "name": "@nicerice/svelte-reactive-params",
   "version": "0.1.0",
   "description": "Makes any params passed to external functions reactive when changed and accessed there.",
   "type": "module",

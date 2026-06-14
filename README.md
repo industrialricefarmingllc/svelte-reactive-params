@@ -23,14 +23,21 @@ Input:
 
 Output:
 
-The plugin rewrites that call so `countUp` receives a live wrapper around `counter`.
+```svelte
+<script lang="ts">
+  import { countUp } from './lib/countUp.svelte.ts'
+
+  let { counter = 0 } = $props()
+
+  countUp({ get counter() { return counter }, set counter(v) { counter = v } })
+</script>
+```
 
 Usage:
 
 ```ts
-export function countUp(args) {
-  const { value } = args
-  value++ // updates in template
+export function countUp(counter) {
+  counter++ // updates in template thanks to the transformed setter keeping the script tag's scope
 }
 ```
 
