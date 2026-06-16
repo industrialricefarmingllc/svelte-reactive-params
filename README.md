@@ -44,7 +44,7 @@ export function countUp(counter) {
 ## Install
 
 ```bash
-bun add svelte-reactive-params
+bun i @nicerice/svelte-reactive-params
 ```
 
 ## Use
