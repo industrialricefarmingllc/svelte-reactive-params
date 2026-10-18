@@ -38,9 +38,13 @@ Then you can use it anywhere in another file like:
 ```ts
 // someFunction.ts
 export function countUp(counter) {
-  counter++ // reactively updates in template thanks to the transformed setter keeping the script tag's scope
+  counter++
 }
 ```
+
+Usually this wouldn't update the number in our template, because reactivity is tied to the scope of the template file,
+but since we pass and access an object reference, JS carries over that template scope into any other place we need it.
+And thanks to ES5 setters/getters, we don't even need to write our code differently to use it.
 
 ## Install
 
