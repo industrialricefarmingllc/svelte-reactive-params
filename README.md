@@ -21,7 +21,7 @@ Input:
 </script>
 ```
 
-Output:
+Vite will transform this behind the scenes into:
 
 ```svelte
 <script lang="ts">
@@ -33,11 +33,12 @@ Output:
 </script>
 ```
 
-Usage:
+Then you can use it anywhere in another file like:
 
 ```ts
+// someFunction.ts
 export function countUp(counter) {
-  counter++ // updates in template thanks to the transformed setter keeping the script tag's scope
+  counter++ // reactively updates in template thanks to the transformed setter keeping the script tag's scope
 }
 ```
 
