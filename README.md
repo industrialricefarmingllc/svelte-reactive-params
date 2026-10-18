@@ -15,7 +15,7 @@ Input:
 <script lang="ts">
   import { countUp } from './lib/countUp.svelte.ts'
 
-  let { counter = 0 } = $props()
+  let counter = 0
 
   countUp(counter)
 </script>
@@ -27,7 +27,7 @@ Vite will transform this behind the scenes into:
 <script lang="ts">
   import { countUp } from './lib/countUp.svelte.ts'
 
-  let { counter = 0 } = $props()
+  let counter = 0
 
   countUp({ get counter() { return counter }, set counter(v) { counter = v } })
 </script>
